@@ -43,8 +43,8 @@
                         <span class="mr-auto">
                             @if (Route::is('siswa.data'))
                             Data Siswa
-                            @elseif (Route::is('siswa.tambah'))
-                            Buat Data
+                            @elseif (Route::is('siswa.data.akun'))
+                            Kelola Akun
                             @else
                             Siswa
                             @endif
