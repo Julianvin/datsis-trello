@@ -7,15 +7,18 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         Swal.fire({
-            position: "top-end",
+            title: "Berhasil!",
+            text: "{{ Session::get('success') }}", // Mengambil pesan dari session
             icon: "success",
-            title: "{{ Session::get('success') }}",
-            showConfirmButton: false,
-            timer: 1500
+            position: "center", // Menetapkan posisi SweetAlert di tengah
+            showConfirmButton: false, // Tidak menampilkan tombol OK
+            timer: 2000, // Durasi dalam milidetik (1,5 detik)
+            timerProgressBar: true, // Menampilkan progress bar untuk timer
         });
     });
 </script>
 @endif
+
 
 <div class="container mx-auto mt-5 px-4 md:px-8">
     <div class="header shadow-md rounded-lg overflow-hidden">
@@ -24,10 +27,10 @@
         </div>
 
         <div class="p-4">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-                <a href="{{ route('landing_page') }}"
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 b-4">
+                <a href="{{ route('landing_page_admin') }}"
                     class="mt-2 text-lg font-semibold text-gray-500 hover:text-gray-700 hover:underline">
-                    <i class="fa-solid fa-arrow-left"></i> Halaman Daftar siswa 
+                    <i class="fa-solid fa-arrow-left"></i> Halaman Daftar siswa
                 </a>
                 <form class="flex justify-end space-x-2 w-full md:w-1/3" action="" method="GET">
                     <input type="text" name="search_name"
@@ -99,7 +102,6 @@
         </div>
     </div>
 </div>
-
 <script src="{{ asset('assets/js/siswa/index.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

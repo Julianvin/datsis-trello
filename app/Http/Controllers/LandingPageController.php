@@ -7,13 +7,15 @@ use App\Models\dataSiswa;
 
 class LandingPageController extends Controller
 {
-    //
+    // Landing page utama (login)
 
-    public function index(Request $request)
+
+    // Landing page untuk Admin
+    public function adminLandingPage(Request $request)
     {
         $search = $request->input('search');
 
-        // Jika ada input pencarian, filter data siswa
+        // Filter data siswa jika ada input pencarian
         if ($search) {
             $siswa = dataSiswa::where('nama', 'like', "%$search%")
                 ->orWhere('nis', 'like', "%$search%")
@@ -25,6 +27,12 @@ class LandingPageController extends Controller
             $siswa = dataSiswa::orderBy('created_at', 'desc')->get();
         }
 
-        return view('pages.index', compact('siswa'));
+        return view('admin.index', compact('siswa')); // Menampilkan halaman admin
+    }
+
+    // Landing page untuk User
+    public function userLandingPage()
+    {
+        return view('user.index'); // Menampilkan halaman user
     }
 }

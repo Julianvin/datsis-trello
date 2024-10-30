@@ -16,16 +16,16 @@ class DataSiswaController extends Controller
     public function index(Request $request)
     {
         $siswa = dataSiswa::where('nama', 'LIKE', '%' . $request->search_name . '%')->orderBy('nama', 'asc')->get();
-        return view('siswa.index', compact('siswa'));
+        return view('admin.siswa.index', compact('siswa'));
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
         //
-        return view('siswa.create');
+        return view('admin.siswa.create');
     }
 
     /**
@@ -95,7 +95,7 @@ class DataSiswaController extends Controller
         $siswa = dataSiswa::findOrFail($id);
         // Kembalikan view ke halaman edit dengan data siswa yaitu id nya
         // compact berguna untuk mengirim variabel yang ada ke dalam view yang sudh di tentukan
-        return view('siswa.edit', compact('siswa'));
+        return view('admin.siswa.edit', compact('siswa'));
     }
 
     /**

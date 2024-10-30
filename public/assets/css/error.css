@@ -1,0 +1,81 @@
+body {
+    background-color: #333333;
+    width: 95vw;
+    height: 95vh;
+    font-family: "Arial Black";
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-num {
+    background: linear-gradient(to right, white, #202020);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 8em;
+}
+
+.eye {
+    background: linear-gradient(to right, white, #9e9c9c);
+    border-radius: 50%;
+    display: inline-block;
+    height: 100px;
+    position: relative;
+    width: 100px;
+}
+.eye::after {
+    background: #000;
+    border-radius: 50%;
+    bottom: 56.1px;
+    content: "";
+    height: 33px;
+    position: absolute;
+    right: 33px;
+    width: 33px;
+}
+
+p {
+    background: linear-gradient(to right, white, #aaa7a7 );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1em;
+}
+
+a {
+    background: linear-gradient(to right, white, #9e9c9c);
+    text-decoration: none;
+    text-transform: uppercase;
+}
+a:hover {
+    color: lightgray;
+}
+
+#back-button {
+    background-color: #808080; /* Gray background */
+    border: none; /* Remove borders */
+    color: white; /* White text */
+    padding: 15px 32px; /* Some padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Make the button inline element */
+    font-size: 12px; /* Set a font size */
+    margin: 4px 2px; /* Some margin */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    border-radius: 12px; /* Rounded corners */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+#back-button:hover {
+    background-color: #4a4a4a; /* Darker gray on hover */
+}
+
+
+.user-auth
+{
+    font-style: italic;
+    font-size: 1.5em;
+    color: #ffffff;
+    text-decoration: underline;
+    text-decoration-color: #ffffff;
+}
