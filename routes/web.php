@@ -37,6 +37,7 @@ Route::middleware('Login')->group(function () {
     Route::middleware(['Admin'])->prefix('/admin')->group(function () {
         /* route untuk login admin */
         Route::get('/halaman', [LandingPageController::class, 'adminLandingPage'])->name('landing_page_admin');
+        Route::get('/siswa/export-pdf/{id}', [DataSiswaController::class, 'exportPDF'])->name('siswa.export-pdf');
         Route::prefix('/siswa')->name('siswa.')->group(function () {
             /* route CRUD data siswa */
             Route::get('/data/siswa', [DataSiswaController::class, 'index'])->name('data');/* halaman data akun */

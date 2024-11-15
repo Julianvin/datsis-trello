@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\dataSiswa;
 use Illuminate\Http\Request;
-// $siswa = dataSiswa::all(); // Ambil semua data siswa
-// dd($siswa); // Debug untuk melihat output
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DataSiswaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    public function exportPDF($id)
+    {
+        $siswa = dataSiswa::findOrFail($id); // Ambil data siswa berdasarkan ID
+        $pdf = Pdf::loadView('admin.siswa.export-pdf', compact('siswa')); // Load tampilan 'export-pdf' dengan data siswa
+        return $pdf->download("data-siswa-{$siswa->name}.pdf"); // Unduh file PDF dengan nama yang menyertakan ID siswa
+    }
 
     public function index(Request $request)
     {
