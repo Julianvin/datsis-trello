@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\dataSiswa;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class DataSiswaController extends Controller
 {
@@ -16,12 +18,13 @@ class DataSiswaController extends Controller
     {
         $siswa = dataSiswa::findOrFail($id); // Ambil data siswa berdasarkan ID
         $pdf = Pdf::loadView('admin.siswa.export-pdf', compact('siswa')); // Load tampilan 'export-pdf' dengan data siswa
+        return $pdf->download("data-siswa-{$siswa->id}-{$siswa->name}.pdf"); // Unduh file PDF dengan nama yang menyertakan ID siswa
         return $pdf->download("data-siswa-{$siswa->name}.pdf"); // Unduh file PDF dengan nama yang menyertakan ID siswa
     }
 
     public function index(Request $request)
     {
-        $siswa = dataSiswa::where('nama', 'LIKE', '%' . $request->search_name . '%')->orderBy('nama', 'asc')->get();
+        $siswa = dataSiswa::with('user')->where('nama', 'LIKE', '%' . $request->search_name . '%')->orderBy('nama', 'asc')->get();
         return view('admin.siswa.index', compact('siswa'));
     }
 
@@ -37,42 +40,55 @@ class DataSiswaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
     public function store(Request $request)
     {
+
         // Validasi input
-        $request->validate(
-            [
-                'nama' => 'required|string|max:255',
-                'nis' => 'required|numeric|digits:8',
-                'rayon' => 'required|string|max:255',
-                'rombel' => 'required|string|max:255',
-                'gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240', // Validasi gambar
-            ],
-            [
-                'nama.required' => 'Nama siswa wajib diisi.',
-                'nama.string' => 'Nama siswa harus berupa teks.',
-                'nama.max' => 'Nama siswa maksimal 255 karakter.',
-                'nis.required' => 'NIS siswa wajib diisi.',
-                'nis.numeric' => 'NIS siswa harus berupa angka.',
-                'nis.digits' => 'NIS siswa harus 8 digit.',
-                'rayon.required' => 'Rayon siswa wajib diisi.',
-                'rayon.string' => 'Rayon siswa harus berupa teks.',
-                'rayon.max' => 'Rayon siswa maksimal 255 karakter.',
-                'rombel.required' => 'Rombel siswa wajib diisi.',
-                'rombel.string' => 'Rombel siswa harus berupa teks.',
-                'rombel.max' => 'Rombel siswa maksimal 255 karakter.',
-                'gambar.required' => 'Gambar siswa wajib diisi.',
-                'gambar.image' => 'Gambar siswa harus berupa gambar.',
-            ]
-        );
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nis' => 'required|numeric|digits:8|unique:data_siswa,nis',
+            'rayon' => 'required|string|max:255',
+            'rombel' => 'required|string|max:255',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+            'password_confirmation' => 'required_with:password|same:password',
+        ], [
+            'password_confirmation.same' => 'Konfirmasi password harus sama dengan password.',
+            'nama.required' => 'Nama harus diisi.',
+            'nama.string' => 'Nama harus berupa teks.',
+            'nama.max' => 'Panjang nama maksimal 255 karakter.',
+            'nis.required' => 'NIS harus diisi.',
+            'nis.numeric' => 'NIS harus berupa angka.',
+            'nis.digits' => 'Panjang NIS harus 8 digit.',
+            'nis.unique' => 'NIS sudah digunakan.',
+            'rayon.required' => 'Rayon harus diisi.',
+            'rayon.string' => 'Rayon harus berupa teks.',
+            'rayon.max' => 'Panjang rayon maksimal 255 karakter.',
+            'rombel.required' => 'Rombel harus diisi.',
+            'rombel.string' => 'Rombel harus berupa teks.',
+            'rombel.max' => 'Panjang rombel maksimal 255 karakter.',
+            'gambar.required' => 'Gambar harus diisi.',
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.mimes' => 'File harus berekstensi .jpeg, .png, .jpg, atau .gif.',
+            'gambar.max' => 'Ukuran file maksimal 10MB.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Email harus berupa alamat email yang valid.',
+            'email.unique' => 'Email sudah digunakan.',
+            'password.required' => 'Password harus diisi.',
+            'password.string' => 'Password harus berupa teks.',
+            'password.min' => 'Panjang password minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi password harus sama dengan password.',
+        ]);
 
         // Mengambil file gambar
         $file = $request->file('gambar');
         $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('assets/images/siswa'), $filename);
+        $path = $file->storeAs('public/assets/images/', $filename);
 
         // Menyimpan data siswa ke database
-        dataSiswa::create([
+        $siswa = dataSiswa::create([
             'nama' => $request->input('nama'),
             'nis' => $request->input('nis'),
             'rayon' => $request->input('rayon'),
@@ -80,8 +96,17 @@ class DataSiswaController extends Controller
             'gambar' => $filename,
         ]);
 
-        return redirect()->route('siswa.data')->with('success', 'Data siswa berhasil ditambahkan.');
+        // Membuat akun pengguna
+        User::create([
+            'name' => $siswa->nama,
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+            'data_siswa_id' => $siswa->id,
+        ]);
+
+        return redirect()->route('siswa.data')->with('success', 'Data siswa dan akun berhasil dibuat.');
     }
+
 
 
     /**
@@ -107,9 +132,9 @@ class DataSiswaController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
     public function update(Request $request, $id)
     {
-
         // Validasi input
         $request->validate([
             'nama' => 'required|string|max:255',
@@ -122,51 +147,46 @@ class DataSiswaController extends Controller
         // Cari data siswa berdasarkan ID
         $siswa = dataSiswa::findOrFail($id);
 
-        // Simpan data yang diperbarui
-        $siswa->nama = $request->nama;
-        $siswa->nis = $request->nis;
-        $siswa->rayon = $request->rayon;
-        $siswa->rombel = $request->rombel;
+        // Perbarui data siswa tanpa gambar
+        $siswa->update($request->only(['nama', 'nis', 'rayon', 'rombel']));
 
         // Periksa apakah ada file gambar baru yang diunggah
         if ($request->hasFile('gambar')) {
             // Hapus gambar lama jika ada
-            if ($siswa->gambar && file_exists(public_path('assets/images/siswa/' . $siswa->gambar))) {
-                unlink(public_path('assets/images/siswa/' . $siswa->gambar));
+            if ($siswa->gambar) {
+                Storage::delete('public/assets/images/' . $siswa->gambar);
             }
 
-            // Upload gambar baru
-            $file = $request->file('gambar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/images/siswa'), $filename);
-            // Simpan nama file baru ke dalam database
-            $siswa->gambar = $filename;
-        }
+            // Simpan gambar baru
+            $filename = time() . '_' . $request->file('gambar')->getClientOriginalName();
+            $path = $request->file('gambar')->storeAs('public/assets/images/', $filename);
 
-        // Simpan data yang diperbarui
-        $siswa->save();
+            // Simpan nama file gambar baru
+            $siswa->update(['gambar' => $filename]);
+        }
 
         // Redirect dengan pesan sukses
         return redirect()->route('siswa.data')->with('success', 'Data siswa berhasil diperbarui!');
     }
 
+
+
     /**
      * Remove the specified resource from storage.
      */
+
     public function destroy(string $id)
     {
-        // Cari data siswa berdasarkan ID
-        $siswa = dataSiswa::where('id', $id)->first();
+        $siswa = dataSiswa::findOrFail($id);
 
-        if ($siswa && file_exists(public_path('assets/images/siswa/' . $siswa->gambar))) {
-            unlink(public_path('assets/images/siswa/' . $siswa->gambar));/* hapus gambar */
+        // Hapus gambar jika ada
+        if ($siswa->gambar) {
+            Storage::delete('public/assets/images/' . $siswa->gambar);
         }
 
-        // Hapus data siswa dari database
-        if ($siswa->delete()) {
-            return redirect()->route('siswa.data')->with('success', "Data user $siswa->name berhasil dihapus!");
-        } else {
-            return redirect()->route('siswa.data')->with('error', "Data user $siswa->name gagal dihapus!");
-        }
+        // Hapus siswa dan relasinya
+        $siswa->delete();
+
+        return redirect()->route('siswa.data')->with('success', "Data siswa dan akun berhasil dihapus.");
     }
 }

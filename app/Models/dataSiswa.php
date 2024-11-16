@@ -20,4 +20,9 @@ class dataSiswa extends Model
         'rombel',
         'gambar',
     ];
+
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
 }

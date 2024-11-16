@@ -74,11 +74,11 @@
                 <div class="bg-yellow-300 rounded-lg shadow-md p-4" data-aos="zoom-in-up"
                     data-aos-delay="{{ 100 + $index * 50 }}">
                     <div class="w-full h-96 md:h-64 bg-gray-200 overflow-hidden rounded-lg mb-4">
-                        @if ($item->gambar && file_exists(public_path('assets/images/siswa/' . $item->gambar)))
-                            <img src="{{ asset('assets/images/siswa/' . $item->gambar) }}" alt="Gambar {{ $item->nama }}"
+                        @if ($item->gambar && file_exists(public_path('/storage/assets/images/' . $item->gambar)))
+                            <img src="{{ asset('/storage/assets/images/' . $item->gambar) }}" alt="Gambar {{ $item->nama }}"
                                 class="w-full h-full object-cover">
                         @else
-                            <img src="{{ asset('assets/images/default.png') }}" alt="Default Image"
+                            <img src="{{ asset('assets/images/pfpkosong.jpeg') }}" alt="Default Image"
                                 class="w-full h-full object-cover">
                         @endif
                     </div>

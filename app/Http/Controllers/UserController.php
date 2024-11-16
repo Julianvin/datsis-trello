@@ -94,7 +94,7 @@ class UserController extends Controller
             'message' => session('message'),
             'requested_url' => $request->fullUrl(),
             'user' => auth()->user()
-        ]);
+        ]);                          
     }
 
 

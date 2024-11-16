@@ -12,7 +12,7 @@
         </div>
 
         <div class="profile-picture">
-            <img src="{{ public_path('assets/images/siswa/' . $siswa->gambar) }}" alt="Foto {{ $siswa->nama }}">
+            <img src="{{ public_path('/storage/assets/images/' . $siswa->gambar) }}" alt="Foto {{ $siswa->nama }}">
         </div>
 
         <div class="details">

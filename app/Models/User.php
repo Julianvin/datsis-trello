@@ -22,7 +22,13 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'data_siswa_id',
     ];
+
+    public function dataSiswa()
+    {
+        return $this->belongsTo(dataSiswa::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

@@ -15,16 +15,12 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('admin123'),
+            'email' => 'admin@example.com',
+            'password' => bcrypt('password123'), // Enkripsi password
+            'data_siswa_id' => 1, // ID dari tabel data_siswa
             'role' => 'admin',
-        ]);
-
-        User::create([
-            'name' => 'delvin',
-            'email' => 'delvin@gmail.com',
-            'password' => bcrypt('siswa123'),
-            'role' => 'siswa',
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
     }
 }

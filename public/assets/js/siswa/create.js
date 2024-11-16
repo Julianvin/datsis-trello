@@ -3,6 +3,7 @@ const fileUploadMessage = document.getElementById("file-upload-message");
 const uploadButton = document.getElementById("upload-button");
 const fileInput = document.getElementById("gambar");
 const previewImage = document.getElementById("preview-image");
+const dragAndDropText = document.getElementById("drag-and-drop-text");
 
 dropArea.addEventListener("dragover", (event) => {
     event.preventDefault();
@@ -40,6 +41,10 @@ function handleFiles(files) {
             fileUploadMessage.textContent = `Gambar berhasil diunggah: ${file.name}`;
             dropArea.classList.remove("border-blue-500");
             dropArea.classList.add("border-gray-300");
+
+            // Menyembunyikan teks dan label setelah file di-upload
+            dragAndDropText.classList.add("hidden");
+            uploadButton.classList.add("hidden");
         };
         reader.readAsDataURL(file); // Membaca file sebagai URL data
         fileInput.files = files; // Set file input dengan file yang di-drag
@@ -58,7 +63,6 @@ fileInput.addEventListener("change", (event) => {
         handleFiles(files);
     }
 });
-
 
 /* sweetalert untuk menyimpan data*/
 document.addEventListener("DOMContentLoaded", function () {
@@ -94,3 +98,37 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 });
+
+function togglePassword() {
+    const passwordInput = document.getElementById("password");
+    const toggleIcon = document.getElementById("toggleIcon");
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye");
+        passwordInput.placeholder = "Masukan Password";
+    } else {
+        passwordInput.type = "password";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash");
+        passwordInput.placeholder = "••••••••";
+    }
+}
+
+function togglePasswordConfirm() {
+    const passwordInput = document.getElementById("password_confirmation");
+    const toggleIcon = document.getElementById("toggleIconC");
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleIcon.classList.remove("fa-eye-slash");
+        toggleIcon.classList.add("fa-eye");
+        passwordInput.placeholder = "Masukan Password";
+    } else {
+        passwordInput.type = "password";
+        toggleIcon.classList.remove("fa-eye");
+        toggleIcon.classList.add("fa-eye-slash");
+        passwordInput.placeholder = "••••••••";
+    }
+}
