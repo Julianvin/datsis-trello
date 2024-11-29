@@ -1,116 +1,254 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-50">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Halaman Register</title>
+    <title>Register - Data Siswa</title>
     <link rel="icon" href="{{ asset('assets/images/wikrama-logo.png') }}" type="image/png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    <!-- AOS resources -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    {{-- sweetAlert --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    {{-- icon --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
 
-<body>
-    <section class="bg-gray-50 dark:bg-gray-900">
-        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0" data-aos="fade-up"
-            data-aos-duration="1000">
-            <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
-                data-aos="zoom-in" data-aos-delay="200" data-aos-duration="800">
-                <div class="p-6 space-y-4 md:space-y-6 sm:p-8" data-aos="fade-up" data-aos-delay="400"
-                    data-aos-duration="1200">
-                    <h1
-                        class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                        Register Akun Mu
-                    </h1>
-                    <form class="space-y-4 md:space-y-6" action="{{ route('register.process') }}" method="POST">
-                        @csrf
-                        <div data-aos="fade-right" data-aos-delay="300" data-aos-duration="1000">
-                            <label for="name"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
-                            <input type="name" name="name" id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="nama..." value="{{ old('name') }}" required="">
-                            @error('name')
-                                <div class="bg-red-500 rounded-lg">{{ $message }}</div>
-                            @enderror
-                        </div>
+<body class="h-full bg-gray-50">
+    <div class="flex min-h-full">
 
-                        <div data-aos="fade-right" data-aos-delay="450" data-aos-duration="1000">
-                            <label for="email"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                            <input type="email" name="email" id="email"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="name@example.com" value="{{ old('email') }}" required="">
-                            @error('email')
-                                <div class="bg-red-500 rounded-lg">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div data-aos="fade-right" data-aos-delay="550" data-aos-duration="1000">
-                            <label for="password"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                            <div class="relative">
-                                <input type="password" name="password" id="password" placeholder="••••••••"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    required>
-                                <span class="absolute inset-y-0 right-3 flex items-center">
-                                    <i id="toggleIcon" class="bi-eye-slash-fill text-xl text-white cursor-pointer"
-                                        onclick="togglePassword()"></i>
-                                </span>
+        <!-- Right side - Form -->
+        <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24">
+            <div class="mx-auto w-full max-w-sm lg:w-96">
+                <div class="text-center">
+                    <img class="mx-auto h-12 w-auto" src="{{ asset('assets/images/wikrama-logo.png') }}"
+                        alt="Wikrama Logo">
+                    <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Create your account</h2>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Or
+                        <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">sign in to your
+                            existing account</a>
+                    </p>
+                </div>
+
+                <div class="mt-8">
+
+                    <div class="mt-6">
+                        <form action="{{ route('register.process') }}" method="POST" enctype="multipart/form-data"
+                            class="space-y-6">
+                            @csrf
+                            <div>
+                                <label for="nama" class="block text-sm font-medium text-gray-700">Full Name</label>
+                                <div class="mt-1">
+                                    <input id="nama" name="nama" type="text" required
+                                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="John Doe">
+                                </div>
+                                @error('nama')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
-                            @error('password')
-                                <div class="bg-red-500 rounded-lg">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div data-aos="fade-right" data-aos-delay="650" data-aos-duration="1000">
-                            <label for="password_confirmation"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
-                                password</label>
-                            <div class="relative">
-                                <input type="password" name="password_confirmation" id="password_confirmation"
-                                    placeholder="••••••••"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    required>
-                                <span class="absolute inset-y-0 right-3 flex items-center">
-                                    <i id="toggleIconC" class="bi-eye-slash-fill text-xl text-white cursor-pointer"
-                                        onclick="togglePasswordConfirm()"></i>
-                                </span>
+
+                            <div>
+                                <label for="nis" class="block text-sm font-medium text-gray-700">NIS</label>
+                                <div class="mt-1">
+                                    <input id="nis" name="nis" type="text" required
+                                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="12345678">
+                                </div>
+                                @error('nis')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
-                            @error('password')
-                                <div class="bg-red-500 rounded-lg">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <button type="submit" data-aos="zoom-in" data-aos-delay="1400" data-aos-duration="1000"
-                            class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-                            Create an account
-                        </button>
-                        <p class="text-sm font-light text-gray-500 dark:text-gray-400" >
-                            sudah punya akun?<a href="/"
-                                class="font-medium text-primary-600 hover:underline dark:text-primary-500">Login
-                                disini</a>
-                        </p>
-                    </form>
+
+                            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
+                                <div>
+                                    <label for="rayon" class="block text-sm font-medium text-gray-700">Rayon</label>
+                                    <div class="mt-1">
+                                        <input id="rayon" name="rayon" type="text" required
+                                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            placeholder="Cisarua 6">
+                                    </div>
+                                    @error('rayon')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div>
+                                    <label for="rombel" class="block text-sm font-medium text-gray-700">Rombel</label>
+                                    <div class="mt-1">
+                                        <input id="rombel" name="rombel" type="text" required
+                                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            placeholder="PPLG XI-2">
+                                    </div>
+                                    @error('rombel')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email
+                                    address</label>
+                                <div class="mt-1">
+                                    <input id="email" name="email" type="email" autocomplete="email" required
+                                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="you@example.com">
+                                </div>
+                                @error('email')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                                <div class="mt-1 relative">
+                                    <input id="password" name="password" type="password"
+                                        autocomplete="new-password" required
+                                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="••••••••">
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                        <button type="button"
+                                            class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500"
+                                            onclick="togglePasswordVisibility()">
+                                            <i class="far fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-1 text-sm text-gray-500" id="password-strength"></div>
+                                @error('password')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="password_confirmation"
+                                    class="block text-sm font-medium text-gray-700">Confirm password</label>
+                                <div class="mt-1">
+                                    <input id="password_confirmation" name="password_confirmation" type="password"
+                                        autocomplete="new-password" required
+                                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                        placeholder="••••••••">
+                                </div>
+                                @error('password_confirmation')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="gambar" class="block text-sm font-medium text-gray-700">Profile
+                                    Picture</label>
+                                <div
+                                    class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                    <div class="space-y-1 text-center">
+                                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor"
+                                            fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                            <path
+                                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <div class="flex text-sm text-gray-600">
+                                            <label for="gambar"
+                                                class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                                <span>Upload a file</span>
+                                                <input id="gambar" name="gambar" type="file" accept="image/*"
+                                                    class="sr-only" required>
+                                            </label>
+                                            <p class="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                    </div>
+                                </div>
+                                @error('gambar')
+                                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <button type="submit"
+                                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Create
+                                    Account</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
 
+        <!-- Left side - Image -->
+        <div class="flex-1 hidden lg:block bg-white rounded-lg shadow-lg p-4">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-gray-900">Selamat Datang di Data Siswa</h2>
+                <p class="mt-2 text-sm text-gray-600">Sistem Informasi Data Siswa yang dibuat oleh PPLG SMK Wikrama Bogor</p>
+            </div>
+            <img class="w-full mt-4" src="{{ asset('assets/images/wikrama-logo.png') }}"
+                alt="Background Image">
+        </div>
+    </div>
 
-    {{-- javascript --}}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{{ asset('assets/js/pages/register.js') }}"></script>
-    <!-- AOS resources -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("password");
+            var eyeIcon = document.querySelector(".fa-eye");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
+        }
+
+        document.getElementById('password').addEventListener('input', function() {
+            var password = this.value;
+            var strength = 0;
+
+            if (password.match(/[a-z]+/)) {
+                strength += 1;
+            }
+            if (password.match(/[A-Z]+/)) {
+                strength += 1;
+            }
+            if (password.match(/[0-9]+/)) {
+                strength += 1;
+            }
+            if (password.match(/[$@#&!]+/)) {
+                strength += 1;
+            }
+
+            var strengthIndicator = document.getElementById('password-strength');
+
+            switch (strength) {
+                case 0:
+                    strengthIndicator.textContent = "Very Weak";
+                    strengthIndicator.style.color = "#ff0000";
+                    break;
+                case 1:
+                    strengthIndicator.textContent = "Weak";
+                    strengthIndicator.style.color = "#ff6600";
+                    break;
+                case 2:
+                    strengthIndicator.textContent = "Fair";
+                    strengthIndicator.style.color = "#ffcc00";
+                    break;
+                case 3:
+                    strengthIndicator.textContent = "Good";
+                    strengthIndicator.style.color = "#99cc00";
+                    break;
+                case 4:
+                    strengthIndicator.textContent = "Strong";
+                    strengthIndicator.style.color = "#00cc00";
+                    break;
+            }
+        });
+    </script>
 </body>
 
 </html>

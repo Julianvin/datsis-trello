@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Export Data Siswa</title>
+    <link rel="stylesheet" href="{{ asset('assets/css/siswa/print-pdf.css') }}">
 </head>
 <body>
     <div class="container">

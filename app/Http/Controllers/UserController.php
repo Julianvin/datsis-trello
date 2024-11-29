@@ -3,18 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\dataSiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Exports\UserExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    public function exportExcelUsers()
+    {
+        return Excel::download(new UserExport, 'rekap-akun-' . date('d-m-Y_H-i-s') . '.xlsx');
+    }
+
     public function index(Request $request)
     {
         //
-        $users = User::where('name', 'LIKE', '%' . $request->search_name . '%')->orderBy('name', 'ASC')->get();
+        $users = User::with('dataSiswa')->where('email', 'LIKE', '%' . $request->search_name . '%')->orderBy('email', 'ASC')->get();
         return view('admin.akuns.index', compact('users'));
     }
 
@@ -28,33 +38,33 @@ class UserController extends Controller
         // Validasi input
         $request->validate([
             'username' => 'required',
-            'password' => 'required'
+            'password' => 'required',
         ], [
-            'username.required' => 'Email atau nama tidak boleh kosong',
-            'password.required' => 'Password tidak boleh kosong'
+            'username.required' => 'Nama siswa tidak boleh kosong',
+            'password.required' => 'Password tidak boleh kosong',
         ]);
 
-        // Cek apakah username yang diinput adalah email atau nama
-        $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+        // Cari user berdasarkan name di data_siswa
+        $user = User::whereHas('dataSiswa', function ($query) use ($request) {
+            $query->where('nama', $request->username);
+        })->first();
 
-        // Gunakan auth attempt dengan dynamic fieldType
-        if (Auth::attempt([$fieldType => $request->username, 'password' => $request->password])) {
+        // Jika user ditemukan, verifikasi password
+        if ($user && Auth::attempt(['email' => $user->email, 'password' => $request->password])) {
             // Mendapatkan pengguna yang login
-            $user = Auth::user();
+            $authenticatedUser = Auth::user();
 
             // Mengarahkan pengguna berdasarkan role
-            if ($user->role === 'admin') {
+            if ($authenticatedUser->role === 'admin') {
                 return redirect()->route('landing_page_admin')->with('success', 'Selamat datang, Admin!');
-            } elseif ($user->role === 'siswa') {
+            } elseif ($authenticatedUser->role === 'siswa') {
                 return redirect()->route('landing_page_siswa')->with('success', 'Selamat datang, Siswa!');
             }
         } else {
             // Jika login gagal
-            return redirect()->back()->with(['failed' => 'Nama/Email, dan password tidak sesuai']);
+            return redirect()->back()->with(['failed' => 'Nama siswa dan password tidak sesuai']);
         }
     }
-
-
     public function showRegister()
     {
         return view('auth.register');
@@ -64,17 +74,62 @@ class UserController extends Controller
     public function makeAcc(Request $request)
     {
         // Validasi data
+        // Validasi input
         $request->validate([
-            'name' => 'required|max:100',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|confirmed', // Menggunakan 'confirmed' untuk mencocokkan dengan 'password_confirmation'
+            'nama' => 'required|string|max:255',
+            'nis' => 'required|numeric|digits:8|unique:data_siswa,nis',
+            'rayon' => 'required|string|max:255',
+            'rombel' => 'required|string|max:255',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+            'password_confirmation' => 'required_with:password|same:password',
+        ], [
+            'password_confirmation.same' => 'Konfirmasi password harus sama dengan password.',
+            'nama.required' => 'Nama harus diisi.',
+            'nama.string' => 'Nama harus berupa teks.',
+            'nama.max' => 'Panjang nama maksimal 255 karakter.',
+            'nis.required' => 'NIS harus diisi.',
+            'nis.numeric' => 'NIS harus berupa angka.',
+            'nis.digits' => 'Panjang NIS harus 8 digit.',
+            'nis.unique' => 'NIS sudah digunakan.',
+            'rayon.required' => 'Rayon harus diisi.',
+            'rayon.string' => 'Rayon harus berupa teks.',
+            'rayon.max' => 'Panjang rayon maksimal 255 karakter.',
+            'rombel.required' => 'Rombel harus diisi.',
+            'rombel.string' => 'Rombel harus berupa teks.',
+            'rombel.max' => 'Panjang rombel maksimal 255 karakter.',
+            'gambar.required' => 'Gambar harus diisi.',
+            'gambar.image' => 'File harus berupa gambar.',
+            'gambar.mimes' => 'File harus berekstensi .jpeg, .png, atau .jpg .',
+            'gambar.max' => 'Ukuran file maksimal 10MB.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Email harus berupa alamat email yang valid.',
+            'email.unique' => 'Email sudah digunakan.',
+            'password.required' => 'Password harus diisi.',
+            'password.string' => 'Password harus berupa teks.',
+            'password.min' => 'Panjang password minimal 8 karakter.',
         ]);
 
-        // Membuat user baru
+        // Mengambil file gambar
+        $file = $request->file('gambar');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->storeAs('public/assets/images/', $filename);
+
+        // Menyimpan data siswa ke database
+        $siswa = dataSiswa::create([
+            'nama' => $request->input('nama'),
+            'nis' => $request->input('nis'),
+            'rayon' => $request->input('rayon'),
+            'rombel' => $request->input('rombel'),
+            'gambar' => $filename,
+        ]);
+
+        // Membuat akun pengguna
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password), // Enkripsi password
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+            'data_siswa_id' => $siswa->id,
         ]);
 
         // Redirect setelah sukses register
@@ -94,7 +149,7 @@ class UserController extends Controller
             'message' => session('message'),
             'requested_url' => $request->fullUrl(),
             'user' => auth()->user()
-        ]);                          
+        ]);
     }
 
 
@@ -123,7 +178,6 @@ class UserController extends Controller
         // dd($request->all());
         //create digunakan untuk menyimpan data baru ke dalam tabel users di database.
         User::create([
-            'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
             // Untuk Encripsi pasword dari 345543 ke @HSGYT@%^LHHGSDGOSIJ
@@ -157,7 +211,6 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required|max:100',
             'email' => 'required|email|unique:users,email,' . $id,
             'role' => 'required',
             'password' => 'nullable|min:8', // Password bersifat opsional karna nullable
@@ -169,7 +222,6 @@ class UserController extends Controller
 
         // Update data user berdasarkan inputan form
         // name, email dan role di update berdasarkan inputan form
-        $users->name = $request->name;
         $users->email = $request->email;
         $users->role = $request->role;
 

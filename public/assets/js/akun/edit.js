@@ -6,7 +6,7 @@ function togglePassword() {
         passwordInput.type = "text";
         toggleIcon.classList.remove("fa-eye-slash");
         toggleIcon.classList.add("fa-eye");
-        passwordInput.placeholder = "Ganti Pasword?...";
+        passwordInput.placeholder = "Ganti Password?...";
     } else {
         passwordInput.type = "password";
         toggleIcon.classList.remove("fa-eye");

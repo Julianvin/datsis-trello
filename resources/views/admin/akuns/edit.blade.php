@@ -19,13 +19,6 @@
                 </div>
             @endif
 
-            <div class="mb-4" data-aos="fade-up" data-aos-delay="100">
-                <label for="name" class="block text-gray-700 font-bold mb-2">Nama Siswa</label>
-                <input type="text" id="name" name="name" required
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    placeholder="Masukkan name siswa" value="{{ $users->name }}">
-            </div>
-
             <div class="flex flex-wrap" data-aos="fade-up">
                 <div class="w-full md:w-1/2 mb-3 px-2">
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email:</label>
@@ -55,10 +48,9 @@
                 </select>
             </div>
 
-
-            <div class="flex flex-col md:flex-row items-center justify-between">
+            <div class="flex flex-row items-center justify-between">
                 <button type="submit"
-                    class="btn-buat bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-2 md:mb-0 md:mr-2">
+                    class="btn-buat bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2">
                     Simpan
                 </button>
                 <a href="{{ route('siswa.data.akun') }}"
@@ -73,3 +65,4 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{{ asset('assets/js/akun/edit.js') }}"></script>
 @endsection
+

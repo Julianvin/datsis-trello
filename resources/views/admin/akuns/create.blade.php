@@ -18,13 +18,6 @@
                 </div>
             @endif
 
-            <div class="mb-4" data-aos="fade-up" data-aos-delay="100">
-                <label for="name" class="block text-gray-700 font-bold mb-2">Nama Siswa</label>
-                <input type="text" id="name" name="name" required
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    placeholder="Masukkan name siswa" value="{{ old('name') }}">
-            </div>
-
             <div class="flex flex-wrap" data-aos="fade-up">
                 <div class="w-full md:w-1/2 mb-3 px-2">
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email:</label>

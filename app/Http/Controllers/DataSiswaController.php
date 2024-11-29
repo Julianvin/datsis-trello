@@ -7,12 +7,19 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DataSiswaExport;
 
 class DataSiswaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    public function exportExcelDataSiswa()
+    {
+        return Excel::download(new DataSiswaExport, 'Rekap-data-siswa' . date('d-m-Y_H-i-s') . '.xlsx');
+    }
 
     public function exportPDF($id)
     {
@@ -71,7 +78,7 @@ class DataSiswaController extends Controller
             'rombel.max' => 'Panjang rombel maksimal 255 karakter.',
             'gambar.required' => 'Gambar harus diisi.',
             'gambar.image' => 'File harus berupa gambar.',
-            'gambar.mimes' => 'File harus berekstensi .jpeg, .png, .jpg, atau .gif.',
+            'gambar.mimes' => 'File harus berekstensi .jpeg, .png, atau .jpg .',
             'gambar.max' => 'Ukuran file maksimal 10MB.',
             'email.required' => 'Email harus diisi.',
             'email.email' => 'Email harus berupa alamat email yang valid.',
@@ -98,7 +105,6 @@ class DataSiswaController extends Controller
 
         // Membuat akun pengguna
         User::create([
-            'name' => $siswa->nama,
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
             'data_siswa_id' => $siswa->id,

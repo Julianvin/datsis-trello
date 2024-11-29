@@ -8,26 +8,34 @@
                 <h2 class="text-xl font-bold text-white">Daftar Siswa</h2>
             </div>
 
-            <!-- Navigation and Search -->
             <div class="p-4 space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between gap-4">
-                    <a href="{{ route('landing_page_admin') }}"
-                        class="inline-flex items-center text-gray-600 hover:text-gray-900">
-                        <i class="fa-solid fa-arrow-left mr-2"></i>
-                        <span>Kembali ke Dashboard</span>
-                    </a>
+                <!-- Navigation and Search -->
+                <div class="p-4 space-y-4">
 
-                    <form action="" method="GET" class="w-full sm:w-auto">
-                        <div class="relative">
-                            <input type="text" name="search_name"
-                                class="w-full sm:w-64 pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Cari Data Siswa" value="{{ request('search_name') }}">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fa-solid fa-search text-gray-400"></i>
+                    <!-- Export Excel Button -->
+                    <div class="flex justify-end">
+                        <a href="{{ route('siswa.export.excel.dataSiswa') }}"
+                            class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition-colors">
+                            <i class="fa-solid fa-file-excel mr-2"></i>
+                            Export Excel
+                        </a>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row justify-between gap-4">
+                        <span></span>
+                        <form action="" method="GET" class="w-full sm:w-auto">
+                            <div class="relative">
+                                <input type="text" name="search_name"
+                                    class="w-full sm:w-64 pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Cari Data Siswa" value="{{ request('search_name') }}">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-search text-gray-400"></i>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
+
 
                 <!-- Mobile Data Cards -->
                 <div class="block md:hidden">
@@ -49,7 +57,7 @@
                             </div>
 
                             <div class="mt-4 flex flex-wrap gap-2">
-                                <a href="{{ route('siswa.export-pdf', $item->id) }}"
+                                <a href="{{ route('siswa.export-siswa-pdf', $item->id) }}"
                                     class="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-md text-sm"
                                     target="_blank">
                                     <i class="fa-solid fa-print mr-1"></i>
@@ -125,10 +133,11 @@
                                         <img src="{{ asset('/storage/assets/images/' . $item->gambar) }}"
                                             alt="Foto {{ $item->nama }}" class="h-10 w-10 rounded-full object-cover">
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center">
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium flex items-center justify-center">
                                         <div class="flex items-center justify-center space-x-2">
                                             <div class="relative group">
-                                                <a href="{{ route('siswa.export-pdf', $item->id) }}"
+                                                <a href="{{ route('siswa.export-siswa-pdf', $item->id) }}"
                                                     class="inline-flex items-center px-2 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors duration-200"
                                                     target="_blank">
                                                     <i class="fa-solid fa-print mr-1"></i>

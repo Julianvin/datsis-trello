@@ -1,130 +1,180 @@
-{{-- @extends('layouts.layout')
-
-@section('content') --}}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-gray-50">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Halaman Login</title>
+    <title>Login - Data Siswa</title>
     <link rel="icon" href="{{ asset('assets/images/wikrama-logo.png') }}" type="image/png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    <!-- AOS resources -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    {{-- sweetAlert --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- icon --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
 
-<body>
-    @if (Session::has('success'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Swal.fire({
-                    title: "Berhasil!",
-                    text: "{{ Session::get('success') }}",
-                    icon: "success",
-                    position: "center",
-                    showConfirmButton: false,
-                    timer: 2000,
-                    timerProgressBar: true,
-                });
-            });
-        </script>
-    @elseif (Session::has('failed'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                Swal.fire({
-                    title: "Huhh...!",
-                    text: "{{ Session::get('failed') }}",
-                    icon: "error",
-                    position: "top",
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true,
-                });
-            });
-        </script>
-    @endif
+<body class="h-full bg-gray-50">
 
+    <div class="flex min-h-full">
 
-    <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12 bg-gray-50 dark:bg-gray-900">
-        <div class="relative py-3 sm:max-w-xl sm:mx-auto" data-aos="zoom-in-up" data-aos-duration="800">
-            <div
-                class="absolute inset-0 bg-gradient-to-r from-gray-400 to-gray-700 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
-            </div>
-            <div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-                <form action="{{ route('login.process') }}" method="POST" class="max-w-md mx-auto space-y-6"
-                    data-aos="fade-up" data-aos-duration="800">
-                    @csrf
-                    <div class="max-w-md mx-auto">
-                        <div>
-                            <h1 class="text-2xl font-semibold">Sign In</h1>
+        @if (Session::has('success'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        title: "Berhasil!",
+                        text: "{{ Session::get('success') }}",
+                        icon: "success",
+                        position: "center",
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true,
+                    });
+                });
+            </script>
+        @elseif (Session::has('failed'))
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        title: "Huhh...!",
+                        text: "{{ Session::get('failed') }}",
+                        icon: "error",
+                        position: "top",
+                        showConfirmButton: false,
+                        timer: 2500,
+                        timerProgressBar: true,
+                    });
+                });
+            </script>
+        @endif
+
+        <!-- Right side - Login Form -->
+        <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-20 xl:px-24">
+            <div class="mx-auto w-full max-w-sm lg:w-96">
+                <div>
+                    <img class="h-12 w-auto mx-auto" src="{{ asset('assets/images/wikrama-logo.png') }}"
+                        alt="Wikrama Logo">
+                    <h2 class="mt-6 text-3xl font-extrabold text-gray-900 text-center">Sign in to your account</h2>
+                    <p class="mt-2 text-sm text-gray-600 text-center">
+                        Or
+                        <a href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                            create a new account
+                        </a>
+                    </p>
+                </div>
+
+                <div class="mt-8">
+
+                    <div class="mt-6 relative">
+                        <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                            <div class="w-full border-t border-gray-300"></div>
                         </div>
-                        <div class="divide-y divide-gray-200">
-                            <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                                <div class="relative">
-                                    <input autocomplete="off" id="username" name="username" type="text"
-                                        value="{{ old('username') }}"
-                                        class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600"
-                                        placeholder="Email address" />
-                                    <label for="username"
-                                        class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Username/Email</label>
-                                    @error('username')
-                                        <div class="invalid-feedback text-red-500" data-aos="fade-right"
-                                            data-aos-duration="600">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                {{-- password --}}
-                                <div class="relative">
-                                    <div class="flex items-center">
-                                        <input autocomplete="off" id="password" name="password" type="password"
-                                            class="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600"
-                                            placeholder="" />
-                                        <span class="ml-2 toggle-password text-xl text-gray-900" onclick="togglePassword()">
-                                            <i id="toggleIcon" class="bi-eye-slash-fill hover:cursor-pointer hover:text-gray-900 transition duration-300 ease-in-out"></i>
-                                        </span>
-                                    </div>
-                                    <label for="password"
-                                        class="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">••••••••</label>
-                                    @error('password')
-                                        <div class="text-red-500" data-aos="fade-right" data-aos-duration="600">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <div class="relative">
-                                    <button
-                                        class="w-full bg-cyan-500 text-white rounded-md px-2 py-1 hover:bg-cyan-600 transition duration-300 ease-in-out">Submit</button>
-                                </div>
-                            </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">Or continue with</span>
                         </div>
                     </div>
-                </form>
-                <hr class="my-4 border-gray-300">
-                <p class="text-center">
-                    Belum punya akun? <a href="{{ route('register') }}" class="text-cyan-500 underline">Register</a>
-                </p>
+                </div>
+
+                <div class="mt-6">
+                    <form action="{{ route('login.process') }}" method="POST" class="space-y-6">
+                        @csrf
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-gray-700">
+                                Username or Email
+                            </label>
+                            <div class="mt-1">
+                                <input id="username" name="username" type="text" autocomplete="username" required
+                                    value="{{ old('username') }}"
+                                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    placeholder="Enter your username or email">
+                            </div>
+                            @error('username')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700">
+                                Password
+                            </label>
+                            <div class="mt-1 relative">
+                                <input id="password" name="password" type="password" autocomplete="current-password"
+                                    required
+                                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    placeholder="Enter your password">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    <button type="button" onclick="togglePassword()"
+                                        class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500">
+                                        <i id="toggleIcon" class="far fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            @error('password')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input id="remember-me" name="remember-me" type="checkbox"
+                                    class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+                                    Remember me
+                                </label>
+                            </div>
+
+                            {{-- <div class="text-sm">
+                                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                        Forgot your password?
+                                    </a>
+                                </div> --}}
+                        </div>
+
+                        <div>
+                            <button type="submit"
+                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Sign in
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
+        </div>
+
+        <!-- right side - Image -->
+        <div class="flex-1 hidden lg:block bg-white rounded-lg shadow-lg p-4">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-gray-900">Selamat Datang di Data Siswa</h2>
+                <p class="mt-2 text-sm text-gray-600">Sistem Informasi Data Siswa yang dibuat oleh PPLG SMK Wikrama Bogor</p>
+            </div>
+            <img class="w-full mt-4" src="{{ asset('assets/images/wikrama-logo.png') }}"
+                alt="Background Image">
         </div>
     </div>
 
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
 
-    {{-- javascript --}}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{{ asset('assets/js/pages/login.js') }}"></script>
-    <!-- AOS resources -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Initialize AOS
+        AOS.init();
+    </script>
 </body>
 
 </html>
