@@ -31,7 +31,13 @@ class DataSiswaController extends Controller
 
     public function index(Request $request)
     {
-        $siswa = dataSiswa::with('user')->where('nama', 'LIKE', '%' . $request->search_name . '%')->orderBy('nama', 'asc')->get();
+        // Ambil data siswa berdasarkan pencarian
+        $siswa = dataSiswa::with('user')
+            ->where('nama', 'LIKE', '%' . $request->search_name . '%')
+            ->orderBy('nama', 'asc')
+            ->get();
+
+
         return view('admin.siswa.index', compact('siswa'));
     }
 

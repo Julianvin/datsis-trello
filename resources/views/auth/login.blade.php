@@ -23,19 +23,23 @@
     <div class="flex min-h-full">
 
         @if (Session::has('success'))
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    Swal.fire({
-                        title: "Berhasil!",
-                        text: "{{ Session::get('success') }}",
-                        icon: "success",
-                        position: "center",
-                        showConfirmButton: false,
-                        timer: 2000,
-                        timerProgressBar: true,
-                    });
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    title: "Berhasil!",
+                    text: "{{ Session::get('success') }}",
+                    icon: "success",
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true,
+                    toast: true,
+                    customClass: {
+                        popup: 'animated fadeInRight'
+                    }
                 });
-            </script>
+            });
+        </script>
         @elseif (Session::has('failed'))
             <script>
                 document.addEventListener('DOMContentLoaded', function() {

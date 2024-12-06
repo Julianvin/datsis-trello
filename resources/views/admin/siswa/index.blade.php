@@ -210,10 +210,14 @@
                     title: "Berhasil!",
                     text: "{{ Session::get('success') }}",
                     icon: "success",
-                    position: "center",
+                    position: "top-end",
                     showConfirmButton: false,
-                    timer: 2000,
+                    timer: 2500,
                     timerProgressBar: true,
+                    toast: true,
+                    customClass: {
+                        popup: 'animated fadeInRight'
+                    }
                 });
             });
         </script>
